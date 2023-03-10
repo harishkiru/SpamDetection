@@ -68,6 +68,12 @@ public class SpamDetector {
         List<Map.Entry<String, Integer>> spam = new ArrayList<>(spamWordCount.entrySet());
         spam.sort(Map.Entry.comparingByValue());
         Collections.reverse(spam);
+        for (int i = 0; i < spam.size(); i++) {
+            if (spam.get(i).getValue() < 25 || spam.get(i).getValue() > 45) {
+                spam.remove(i);
+                i--;
+            }
+        }
         System.out.println("Top 10 most common words in spam:");
         for (int i = 0; i < 10; i++) {
             System.out.println(spam.get(i));
@@ -76,28 +82,25 @@ public class SpamDetector {
         List<Map.Entry<String, Integer>> ham = new ArrayList<>(hamCount.entrySet());
         ham.sort(Map.Entry.comparingByValue());
         Collections.reverse(ham);
+        //Remove words that appear less than 10 times and 100 times
+        for (int i = 0; i < ham.size(); i++) {
+            if (ham.get(i).getValue() < 10 || ham.get(i).getValue() > 250) {
+                ham.remove(i);
+                i--;
+            }
+        }
         System.out.println("Top 10 most common words in ham:");
         for (int i = 0; i < 10; i++) {
             System.out.println(ham.get(i));
         }
 
-        String spamList []= new String[spam.size()];
-        for (int i = 0; i<spam.size(); i++){
-            if(spam.get(i).getValue() > 10 && spam.get(i).getValue() < 100){
-                spamList[i] = spam.get(i).getKey();
-            }
-        }
-        System.out.println(spamList[0]);
-        System.out.println("Spam List: ");
-//        for (int i = 0; i<spamList.length; i++){
-//            System.out.println(spamList[i] + " ");
-//        }
+
 
 
     }
 
     private static Set<String> getStopwords() {
-
+        // Use a library to get a list of stopwords
         Set<String> stopwords = new HashSet<>();
         try (Scanner scanner = new Scanner(new File("csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\stopword.txt"))) {
             while (scanner.hasNext()) {
