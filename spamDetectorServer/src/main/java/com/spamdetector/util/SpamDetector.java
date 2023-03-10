@@ -88,7 +88,7 @@ public class SpamDetector {
     private static Set<String> getStopwords() {
 
         Set<String> stopwords = new HashSet<>();
-        try (Scanner scanner = new Scanner(new File("E:\\Desktop\\assspam\\csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\stopword.txt"))) {
+        try (Scanner scanner = new Scanner(new File("csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\stopword.txt"))) {
             while (scanner.hasNext()) {
                 stopwords.add(scanner.next().toLowerCase());
             }
