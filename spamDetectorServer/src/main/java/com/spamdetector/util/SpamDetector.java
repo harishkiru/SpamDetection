@@ -81,6 +81,17 @@ public class SpamDetector {
             System.out.println(ham.get(i));
         }
 
+        String spamList []= new String[spam.size()];
+        for (int i = 0; i<spam.size(); i++){
+            if(spam.get(i).getValue() > 10 && spam.get(i).getValue() < 100){
+                spamList[i] = spam.get(i).getKey();
+            }
+        }
+        System.out.println(spamList[0]);
+        System.out.println("Spam List: ");
+//        for (int i = 0; i<spamList.length; i++){
+//            System.out.println(spamList[i] + " ");
+//        }
 
 
     }
