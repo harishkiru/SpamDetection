@@ -52,6 +52,11 @@ public class SpamResource {
         return null;
     }
 
+    @GET
+    public String hello() {
+        return "Hello, World!";
+    }
+
     private List<TestFile> trainAndTest()  {
         if (this.detector==null){
             this.detector = new SpamDetector();
