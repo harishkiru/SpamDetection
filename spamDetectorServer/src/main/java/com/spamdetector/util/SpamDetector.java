@@ -21,82 +21,76 @@ public class SpamDetector {
     public static void main(String[] args) throws FileNotFoundException {
 
         Map<String, Integer> spamWordCount = new HashMap<>();
-        Map<String, Integer> hamCount = new HashMap<>();
+        Map<String, Integer> hamWordCount = new HashMap<>();
         Set<String> stopwords = getStopwords();
 
         File spamFile = new File("csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\train\\spam");
         File hamFile = new File("csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\train\\ham");
         File ham2File = new File("csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\train\\ham2");
 
-        for (File file : spamFile.listFiles()) {
-            try (Scanner scanner = new Scanner(file)) {
+        spamWordCount = parseWords(spamWordCount, spamFile, stopwords);
+        hamWordCount = parseWords(hamWordCount, hamFile, stopwords);
+        hamWordCount.putAll(parseWords(hamWordCount, ham2File, stopwords));
+
+
+
+
+        //Print out the top 10 most common words in spam and insure they are alphanumeric
+
+        getCommonWords(spamWordCount, "spam");
+        getCommonWords(hamWordCount, "ham");
+
+        System.out.println(getOccurance(spamWordCount, "microsoft"));
+
+
+    }
+
+    private static int getOccurance(Map<String, Integer> set, String word) {
+        return set.get(word);
+    }
+
+    private static Map<String, Integer> parseWords(Map<String, Integer> wordSet, File file, Set<String> stopwords) {
+
+        for (File words : file.listFiles()) {
+            try (Scanner scanner = new Scanner(words)) {
                 Set<String> wordsSeen = new HashSet<>();
                 while (scanner.hasNext()) {
                     String word = scanner.next().toLowerCase();
                     if (!stopwords.contains(word) && !wordsSeen.contains(word)) {
                         wordsSeen.add(word);
-                        if (spamWordCount.containsKey(word)) {
-                            spamWordCount.put(word, spamWordCount.get(word) + 1);
+                        if (wordSet.containsKey(word)) {
+                            wordSet.put(word, wordSet.get(word) + 1);
                         } else {
-                            spamWordCount.put(word, 1);
+                            wordSet.put(word, 1);
                         }
                     }
                 }
+            } catch (FileNotFoundException e) {
+                System.err.println("ERROR >> File not found");
             }
         }
+        return wordSet;
+    }
 
-        for (File file : hamFile.listFiles()) {
-            try (Scanner scanner = new Scanner(file)) {
-                Set<String> wordsSeen = new HashSet<>();
-                while (scanner.hasNext()) {
-                    String word = scanner.next().toLowerCase();
-                    if (!stopwords.contains(word) && !wordsSeen.contains(word)) {
-                        wordsSeen.add(word);
-                        if (hamCount.containsKey(word)) {
-                            hamCount.put(word, hamCount.get(word) + 1);
-                        } else {
-                            hamCount.put(word, 1);
-                        }
-                    }
-                }
-            }
-        }
-
-        System.out.println(spamWordCount.get("wrinkles"));
-
-        //Print out the top 10 most common words in spam
-        List<Map.Entry<String, Integer>> spam = new ArrayList<>(spamWordCount.entrySet());
-        spam.sort(Map.Entry.comparingByValue());
-        Collections.reverse(spam);
-        for (int i = 0; i < spam.size(); i++) {
-            if (spam.get(i).getValue() < 25 || spam.get(i).getValue() > 45) {
-                spam.remove(i);
+    private static void getCommonWords(Map<String, Integer> wordSet, String dataType) {
+        List<Map.Entry<String, Integer>> words = new ArrayList<>(wordSet.entrySet());
+        words.sort(Map.Entry.comparingByValue());
+        Collections.reverse(words);
+        //Remove non-alphanumeric words
+        for (int i = 0; i < words.size(); i++) {
+            if (words.get(i).getValue() < 25 || words.get(i).getValue() > 500 || !words.get(i).getKey().matches("[a-zA-Z0-9]+")) {
+                words.remove(i);
                 i--;
             }
         }
-        System.out.println("Top 10 most common words in spam:");
+        displayCommonWords(words, dataType);
+    }
+
+    private static void displayCommonWords(List<Map.Entry<String, Integer>> words, String dataType) {
+        System.out.println("Top 10 most common words in " + dataType + ":");
         for (int i = 0; i < 10; i++) {
-            System.out.println(spam.get(i));
+            System.out.println(words.get(i));
         }
-
-        List<Map.Entry<String, Integer>> ham = new ArrayList<>(hamCount.entrySet());
-        ham.sort(Map.Entry.comparingByValue());
-        Collections.reverse(ham);
-        //Remove words that appear less than 10 times and 100 times
-        for (int i = 0; i < ham.size(); i++) {
-            if (ham.get(i).getValue() < 10 || ham.get(i).getValue() > 250) {
-                ham.remove(i);
-                i--;
-            }
-        }
-        System.out.println("Top 10 most common words in ham:");
-        for (int i = 0; i < 10; i++) {
-            System.out.println(ham.get(i));
-        }
-
-
-
-
     }
 
     private static Set<String> getStopwords() {
@@ -113,4 +107,3 @@ public class SpamDetector {
     }
 
 }
-
