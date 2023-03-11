@@ -31,6 +31,10 @@ public class SpamDetector {
         spamWordCount = parseWords(spamWordCount, spamFile, stopwords);
         hamWordCount = parseWords(hamWordCount, hamFile, stopwords);
         hamWordCount.putAll(parseWords(hamWordCount, ham2File, stopwords));
+        //Count the number of files in ham and ham2 and add them to the total number of ham files
+        System.out.println(hamFile.listFiles().length + ham2File.listFiles().length);
+
+
 
 
 
@@ -40,9 +44,24 @@ public class SpamDetector {
         getCommonWords(spamWordCount, "spam");
         getCommonWords(hamWordCount, "ham");
 
-        System.out.println(getOccurance(spamWordCount, "microsoft"));
+        System.out.println(getOccurance(spamWordCount, "insurance"));
+        System.out.println(getProbabilityWordSpam(spamWordCount, "insurance"));
+        System.out.println(getProbabilityWordHam(hamWordCount, "insurance"));
 
+        System.out.println(getProbability(spamWordCount, "insurance"));
 
+    }
+
+    public static double getProbability(Map<String, Integer> wordSet, String word) {
+      return getProbabilityWordSpam(wordSet, word) / (getProbabilityWordSpam(wordSet, word) + getProbabilityWordHam(wordSet, word));
+    }
+
+    private static double getProbabilityWordSpam(Map<String, Integer> spamWordCount, String word) {
+        return getOccurance(spamWordCount, word) / 501.0;
+    }
+
+    private static double getProbabilityWordHam(Map<String, Integer> hamWordCount, String word) {
+        return getOccurance(hamWordCount, word) / 2752.0;
     }
 
     private static int getOccurance(Map<String, Integer> set, String word) {
