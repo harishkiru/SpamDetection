@@ -3,7 +3,6 @@ package com.spamdetector.util;
 import com.spamdetector.domain.TestFile;
 
 import java.io.*;
-import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -31,36 +30,72 @@ public class SpamDetector {
         spamWordCount = parseWords(spamWordCount, spamFile, stopwords);
         hamWordCount = parseWords(hamWordCount, hamFile, stopwords);
         hamWordCount.putAll(parseWords(hamWordCount, ham2File, stopwords));
-        //Count the number of files in ham and ham2 and add them to the total number of ham files
-//        System.out.println(hamFile.listFiles().length + ham2File.listFiles().length);
-//
-//        //Print out the top 10 most common words in spam and insure they are alphanumeric
-//
-//        getCommonWords(spamWordCount, "spam");
-//        getCommonWords(hamWordCount, "ham");
-//
-//        System.out.println(getOccurance(spamWordCount, "insurance"));
-//        System.out.println(getProbabilityWS(spamWordCount, "insurance"));
-//        System.out.println(getProbabilityWH(hamWordCount, "insurance"));
-//
-//        System.out.println(getProbability(spamWordCount, "insurance"));
 
-        //Read the test files
-        File testFile = new File("E:\\Desktop\\assspam\\csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\test\\spam\\00014.13574737e55e51fe6737a475b88b5052");
-        Map<String, Integer> testWordSet = readTestFile(testFile, stopwords);
-        TreeMap<String, Double> probabilities = storeProbabilities(testWordSet, spamWordCount, hamWordCount);
-        double n = getN(probabilities);
+        //Iterate through all the tgest spam files
+//        File testSpamFile = new File("csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\test\\spam");
+//        File[] testSpamFiles = testSpamFile.listFiles();
+//        for(File file : testSpamFiles) {
+//            Map<String, Integer> testWordSet2 = readTestFile(file, stopwords);
+//            TreeMap<String, Double> probabilities2 = storeProbabilities(testWordSet2, spamWordCount, hamWordCount);
+//            double n2 = getN(probabilities2);
+//            System.out.println("The probability of this file being spam is: " + (getProbabilitySF(n2)));
+//        }
 
-        //Round the probability to 2 decimal places
-        //DecimalFormat df = new DecimalFormat("#.##");
-        System.out.println("The probability of this file being spam is: " + (getProbabilitySF(n)));
+        File testSpamFile = new File("csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\test\\spam");
+        File[] testSpamFiles = testSpamFile.listFiles();
+        int truePositives = 0;
+        int trueNegatives = 0;
+        int falsePositives = 0;
+        int falseNegatives = 0;
 
-        System.out.println(spamWordCount.get("half"));
 
+        for(File file : testSpamFiles) {
+            Map<String, Integer> testWordSet2 = readTestFile(file, stopwords);
+            TreeMap<String, Double> probabilities2 = storeProbabilities(testWordSet2, spamWordCount, hamWordCount);
+            double n2 = getN(probabilities2);
+            double probability = getProbabilitySF(n2);
+            System.out.println("The probability of this file being spam is: " + probability);
+
+            if(isSpam(probability).equals("spam") && file.getPath().contains("spam")) {
+                truePositives++;
+            } else if(isSpam(probability).equals("ham") && file.getPath().contains("ham")) {
+                trueNegatives++;
+            } else if(isSpam(probability).equals("spam") && file.getPath().contains("ham")) {
+                falsePositives++;
+            } else if(isSpam(probability).equals("ham") && file.getPath().contains("spam")) {
+                falseNegatives++;
+            }
+
+            }
+
+
+
+        System.out.println("True Positives: " + truePositives);
+        System.out.println("True Negatives: " + trueNegatives);
+        System.out.println("False Positives: " + falsePositives);
+        System.out.println("False Negatives: " + falseNegatives);
+        //Get number of files in test/spam directory
+
+        double accuracy = (truePositives + trueNegatives) / (double) (testSpamFiles.length);
+        System.out.println("Accuracy: " + accuracy);
+
+        double precision = truePositives / (double) (truePositives + falsePositives);
+        System.out.println("Precision: " + precision);
+
+        }
+
+        //Calculate Accuracy
+
+
+
+
+    private static String isSpam(double n) {
+        if(n > 0.5) {
+            return "spam";
+        } else {
+            return "ham";
+        }
     }
-
-
-
     public static double getProbabilitySF(double n) {
         return 1 / (1 + Math.exp(n));
     }
@@ -106,7 +141,6 @@ public class SpamDetector {
         return sum;
     }
     private static double getProbability(Map<String, Integer> spamWordCount, Map<String,Integer> hamWordCount, String word) {
-        System.out.println(getProbabilityWS(spamWordCount, word) / (getProbabilityWS(spamWordCount, word) + getProbabilityWH(hamWordCount, word)));
         return getProbabilityWS(spamWordCount, word) / (getProbabilityWS(spamWordCount, word) + getProbabilityWH(hamWordCount, word));
     }
 
