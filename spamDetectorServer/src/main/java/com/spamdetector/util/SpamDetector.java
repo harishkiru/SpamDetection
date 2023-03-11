@@ -3,6 +3,7 @@ package com.spamdetector.util;
 import com.spamdetector.domain.TestFile;
 
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -10,7 +11,6 @@ import java.util.*;
  * You may create more methods to help you organize you strategy and make you code more readable
  */
 public class SpamDetector {
-
     public List<TestFile> trainAndTest(File mainDirectory) {
 //        TODO: main method of loading the directories and files, training and testing the model
 
@@ -32,40 +32,102 @@ public class SpamDetector {
         hamWordCount = parseWords(hamWordCount, hamFile, stopwords);
         hamWordCount.putAll(parseWords(hamWordCount, ham2File, stopwords));
         //Count the number of files in ham and ham2 and add them to the total number of ham files
-        System.out.println(hamFile.listFiles().length + ham2File.listFiles().length);
+//        System.out.println(hamFile.listFiles().length + ham2File.listFiles().length);
+//
+//        //Print out the top 10 most common words in spam and insure they are alphanumeric
+//
+//        getCommonWords(spamWordCount, "spam");
+//        getCommonWords(hamWordCount, "ham");
+//
+//        System.out.println(getOccurance(spamWordCount, "insurance"));
+//        System.out.println(getProbabilityWS(spamWordCount, "insurance"));
+//        System.out.println(getProbabilityWH(hamWordCount, "insurance"));
+//
+//        System.out.println(getProbability(spamWordCount, "insurance"));
 
+        //Read the test files
+        File testFile = new File("E:\\Desktop\\assspam\\csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\test\\spam\\00014.13574737e55e51fe6737a475b88b5052");
+        Map<String, Integer> testWordSet = readTestFile(testFile, stopwords);
+        TreeMap<String, Double> probabilities = storeProbabilities(testWordSet, spamWordCount, hamWordCount);
+        double n = getN(probabilities);
 
+        //Round the probability to 2 decimal places
+        //DecimalFormat df = new DecimalFormat("#.##");
+        System.out.println("The probability of this file being spam is: " + (getProbabilitySF(n)));
 
-
-
-
-        //Print out the top 10 most common words in spam and insure they are alphanumeric
-
-        getCommonWords(spamWordCount, "spam");
-        getCommonWords(hamWordCount, "ham");
-
-        System.out.println(getOccurance(spamWordCount, "insurance"));
-        System.out.println(getProbabilityWordSpam(spamWordCount, "insurance"));
-        System.out.println(getProbabilityWordHam(hamWordCount, "insurance"));
-
-        System.out.println(getProbability(spamWordCount, "insurance"));
+        System.out.println(spamWordCount.get("half"));
 
     }
 
-    public static double getProbability(Map<String, Integer> wordSet, String word) {
-      return getProbabilityWordSpam(wordSet, word) / (getProbabilityWordSpam(wordSet, word) + getProbabilityWordHam(wordSet, word));
+
+
+    public static double getProbabilitySF(double n) {
+        return 1 / (1 + Math.exp(n));
     }
 
-    private static double getProbabilityWordSpam(Map<String, Integer> spamWordCount, String word) {
+    private static TreeMap<String, Double> storeProbabilities(Map<String, Integer> wordSet, Map<String, Integer> spamWordCount, Map<String, Integer> hamWordCount) {
+        //For each word in the wordSet, calculate the probability of it being spam
+        TreeMap<String, Double> probabilityMap = new TreeMap<>();
+        for(String word : wordSet.keySet()) {
+            double probability = getProbability(spamWordCount, hamWordCount, word);
+            probabilityMap.put(word, probability);
+        }
+
+        return probabilityMap;
+    }
+
+    private static Map<String, Integer> readTestFile(File testFile, Set<String> stopwords) {
+        Set<String> wordsSeen = new HashSet<>();
+        Map<String, Integer> wordSet = new HashMap<>();
+        try (Scanner scanner = new Scanner(testFile)) {
+            while (scanner.hasNext()) {
+                String word = scanner.next().toLowerCase();
+                if (!stopwords.contains(word) && !wordsSeen.contains(word) && word.matches("[a-zA-Z]+")) {
+                    wordsSeen.add(word);
+                    if (wordSet.containsKey(word)) {
+                        wordSet.put(word, wordSet.get(word) + 1);
+                    } else {
+                        wordSet.put(word, 1);
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return wordSet;
+    }
+
+    //Pass a TreeMap
+    private static double getN(TreeMap<String, Double> probabilityMap) {
+        double sum = 0;
+        for (double prSW : probabilityMap.values()) {
+            sum += Math.log(1 - prSW) - Math.log(prSW);
+        }
+        return sum;
+    }
+    private static double getProbability(Map<String, Integer> spamWordCount, Map<String,Integer> hamWordCount, String word) {
+        System.out.println(getProbabilityWS(spamWordCount, word) / (getProbabilityWS(spamWordCount, word) + getProbabilityWH(hamWordCount, word)));
+        return getProbabilityWS(spamWordCount, word) / (getProbabilityWS(spamWordCount, word) + getProbabilityWH(hamWordCount, word));
+    }
+
+    private static double getProbabilityWS(Map<String, Integer> spamWordCount, String word) {
+
         return getOccurance(spamWordCount, word) / 501.0;
     }
 
-    private static double getProbabilityWordHam(Map<String, Integer> hamWordCount, String word) {
+    private static double getProbabilityWH(Map<String, Integer> hamWordCount, String word) {
+
         return getOccurance(hamWordCount, word) / 2752.0;
     }
 
-    private static int getOccurance(Map<String, Integer> set, String word) {
-        return set.get(word);
+    private static double getOccurance(Map<String, Integer> set, String word) {
+        //Get the number of times a word occurs in a set
+        try {
+            return set.get(word);
+        } catch (NullPointerException e) {
+            return 1;
+        }
+
     }
 
     private static Map<String, Integer> parseWords(Map<String, Integer> wordSet, File file, Set<String> stopwords) {
@@ -75,7 +137,7 @@ public class SpamDetector {
                 Set<String> wordsSeen = new HashSet<>();
                 while (scanner.hasNext()) {
                     String word = scanner.next().toLowerCase();
-                    if (!stopwords.contains(word) && !wordsSeen.contains(word)) {
+                    if (!stopwords.contains(word) && !wordsSeen.contains(word) && word.matches("[a-zA-Z]+")) {
                         wordsSeen.add(word);
                         if (wordSet.containsKey(word)) {
                             wordSet.put(word, wordSet.get(word) + 1);
