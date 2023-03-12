@@ -257,3 +257,21 @@ textarea {
   }
 }
 
+/* ==========================================================================
+   Custom styles
+   ========================================================================== */
+* {
+  font-size: 16px;
+  margin: 0.16rem;
+}
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: separate;
+}
+
+.row{
+  display: flex;
+  flex-direction: row;
+}
+
