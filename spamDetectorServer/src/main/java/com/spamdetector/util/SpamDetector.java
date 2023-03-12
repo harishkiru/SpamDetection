@@ -10,40 +10,28 @@ import java.util.*;
  * You may create more methods to help you organize you strategy and make you code more readable
  */
 public class SpamDetector {
+    static double accuracy;
+    static double precision;
+
     public List<TestFile> trainAndTest(File mainDirectory) {
-//        TODO: main method of loading the directories and files, training and testing the model
-
-
-        return new ArrayList<TestFile>();
-    }
-
-    public static void main(String[] args) throws FileNotFoundException {
+//      ArrayList of TestFile objects to store the results of the test
+        ArrayList<TestFile> testResults = new ArrayList<>();
 
         Map<String, Integer> spamWordCount = new HashMap<>();
         Map<String, Integer> hamWordCount = new HashMap<>();
         Set<String> stopwords = getStopwords();
 
-        File spamFile = new File("csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\train\\spam");
-        File hamFile = new File("csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\train\\ham");
-        File ham2File = new File("csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\train\\ham2");
+        File spamFile = new File("E:\\Desktop\\assspam\\csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\train\\spam");
+        File hamFile = new File("E:\\Desktop\\assspam\\csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\train\\ham");
+        File ham2File = new File("E:\\Desktop\\assspam\\csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\train\\ham2");
 
         spamWordCount = parseWords(spamWordCount, spamFile, stopwords);
         hamWordCount = parseWords(hamWordCount, hamFile, stopwords);
         hamWordCount.putAll(parseWords(hamWordCount, ham2File, stopwords));
 
-        //Iterate through all the tgest spam files
-//        File testSpamFile = new File("csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\test\\spam");
-//        File[] testSpamFiles = testSpamFile.listFiles();
-//        for(File file : testSpamFiles) {
-//            Map<String, Integer> testWordSet2 = readTestFile(file, stopwords);
-//            TreeMap<String, Double> probabilities2 = storeProbabilities(testWordSet2, spamWordCount, hamWordCount);
-//            double n2 = getN(probabilities2);
-//            System.out.println("The probability of this file being spam is: " + (getProbabilitySF(n2)));
-//        }
-
-        File testSpamFile = new File("csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\test\\spam");
+        File testSpamFile = new File("E:\\Desktop\\assspam\\csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\test\\spam");
         File[] testSpamFiles = testSpamFile.listFiles();
-        File testHamFile = new File("csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\test\\ham");
+        File testHamFile = new File("E:\\Desktop\\assspam\\csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\test\\ham");
         File[] testHamFiles = testHamFile.listFiles();
 
         int truePositives = 0;
@@ -52,72 +40,111 @@ public class SpamDetector {
         int falseNegatives = 0;
 
 
-        int values[] = checkSpam(testSpamFile, testSpamFiles, spamWordCount, hamWordCount, stopwords, truePositives, trueNegatives, falsePositives, falseNegatives);
-        int values2[] = checkHam(testHamFile, testHamFiles, spamWordCount, hamWordCount, stopwords, values[0], values[1], values[2], values[3]);
 
-        System.out.println("True Positives: " + values2[0]);
-        System.out.println("True Negatives: " + values2[1]);
-        System.out.println("False Positives: " + values2[2]);
-        System.out.println("False Negatives: " + values2[3]);
-        //Get number of files in test/spam directory
+        String status;
 
-        System.out.println("Accuracy: " + getAccuracy(values2[0], values2[1], testSpamFiles.length + testHamFiles.length));
-        System.out.println("Precision: " + getPrecision(values2[0], values2[2]));
-
-        }
-
-        //Calculate Accuracy
-
-    public static double getAccuracy(int truePositives, int trueNegatives, int numTestFiles) {
-        return (truePositives + trueNegatives) / (double) numTestFiles;
-    }
-
-    public static double getPrecision(int truePositives, int falsePositives) {
-        return truePositives / (double) (truePositives + falsePositives);
-    }
-
-
-    private static int[] checkSpam(File fileS, File[] files, Map<String, Integer> spamWordCount, Map<String, Integer> hamWordCount, Set<String> stopwords, int truePositives, int trueNegatives, int falsePositives, int falseNegatives) {
-        for(File tempFile : files) {
+        for(File tempFile : testSpamFiles) {
             Map<String, Integer> testWordSet2 = readTestFile(tempFile, stopwords);
             TreeMap<String, Double> probabilities2 = storeProbabilities(testWordSet2, spamWordCount, hamWordCount);
             double n2 = getN(probabilities2);
             double probability = getProbabilitySF(n2);
-            System.out.println("The probability of this file being spam is: " + probability);
-
-            if(isSpam(probability).equals("spam") && tempFile.getPath().contains("spam")) {
-                truePositives++;
-            } else if(isSpam(probability).equals("ham") && tempFile.getPath().contains("ham")) {
-                trueNegatives++;
-            } else if(isSpam(probability).equals("spam") && tempFile.getPath().contains("ham")) {
-                falsePositives++;
-            } else if(isSpam(probability).equals("ham") && tempFile.getPath().contains("spam")) {
-                falseNegatives++;
-            }
-
-        }
-        return new int[]{truePositives, trueNegatives, falsePositives, falseNegatives};
-    }
-
-    public static int[] checkHam(File fileS, File[] files, Map<String, Integer> spamWordCount, Map<String, Integer> hamWordCount, Set<String> stopwords, int truePositives, int trueNegatives, int falsePositives, int falseNegatives) {
-        for(File tempFile : files) {
-            Map<String, Integer> testWordSet2 = readTestFile(tempFile, stopwords);
-            TreeMap<String, Double> probabilities2 = storeProbabilities(testWordSet2, spamWordCount, hamWordCount);
-            double n2 = getN(probabilities2);
-            double probability = getProbabilitySF(n2);
-            System.out.println("The probability of this file being ham is: " + probability);
-
-            if(isSpam(probability).equals("ham") && tempFile.getPath().contains("ham")) {
+            //System.out.println("The probability of this file being spam is: " + probability);
+            status = checkSpam(tempFile, probability, truePositives, trueNegatives, falsePositives, falseNegatives);
+            testResults.add(new TestFile(tempFile.getName(), probability, "spam"));
+            switch (status) {
+                case "truePositives":
                     truePositives++;
-                } else if(isSpam(probability).equals("spam") && tempFile.getPath().contains("spam")) {
+                    break;
+                case "trueNegatives":
                     trueNegatives++;
-                } else if(isSpam(probability).equals("ham") && tempFile.getPath().contains("spam")) {
+                    break;
+                case "falsePositives":
                     falsePositives++;
-                } else if(isSpam(probability).equals("spam") && tempFile.getPath().contains("ham")) {
+                    break;
+                case "falseNegatives":
                     falseNegatives++;
-                }
+                    break;
             }
-        return new int[]{truePositives, trueNegatives, falsePositives, falseNegatives};
+        }
+
+        for(File tempFile : testHamFiles) {
+            Map<String, Integer> testWordSet2 = readTestFile(tempFile, stopwords);
+            TreeMap<String, Double> probabilities2 = storeProbabilities(testWordSet2, spamWordCount, hamWordCount);
+            double n2 = getN(probabilities2);
+            double probability = getProbabilitySF(n2);
+            //System.out.println("The probability of this file being ham is: " + probability);
+            status = checkHam(tempFile, probability, truePositives, trueNegatives, falsePositives, falseNegatives);
+            testResults.add(new TestFile(tempFile.getName(), probability, "ham"));
+            switch (status) {
+                case "truePositives":
+                    truePositives++;
+                    break;
+                case "trueNegatives":
+                    trueNegatives++;
+                    break;
+                case "falsePositives":
+                    falsePositives++;
+                    break;
+                case "falseNegatives":
+                    falseNegatives++;
+                    break;
+            }
+        }
+
+        setAccuracy(truePositives, trueNegatives, testSpamFiles.length + testHamFiles.length);
+        setPrecision(truePositives, falsePositives);
+
+        return testResults;
+    }
+
+    //Calculate Accuracy
+    public static double getAccuracy() {
+        return accuracy;
+    }
+
+    public static double getPrecision() {
+        return precision;
+    }
+
+
+    private static void setAccuracy(int truePositives, int trueNegatives, int numTestFiles) {
+        accuracy = (truePositives + trueNegatives) / (double) numTestFiles;
+    }
+
+    private static void setPrecision(int truePositives, int falsePositives) {
+        precision = truePositives / (double) (truePositives + falsePositives);
+    }
+
+
+    private String checkSpam(File tempFile, double probability, int truePositives, int trueNegatives, int falsePositives, int falseNegatives) {
+
+        if(isSpam(probability).equals("spam") && tempFile.getPath().contains("spam")) {
+            return "truePositives";
+        } else if(isSpam(probability).equals("ham") && tempFile.getPath().contains("ham")) {
+            return "trueNegatives";
+        } else if(isSpam(probability).equals("spam") && tempFile.getPath().contains("ham")) {
+            return "falsePositives";
+        } else if(isSpam(probability).equals("ham") && tempFile.getPath().contains("spam")) {
+            return "falseNegatives";
+        }
+
+        return "KEKW U BROKE IT LUL OMEGALUL GIGACHAD KEKW KEKW CAN I GET A POGGERS IN THE CHAT CUZ HOW U MAKE THIS NOT WORK DAWG";
+    }
+
+    public static String checkHam(File tempFile, double probability, int truePositives, int trueNegatives, int falsePositives, int falseNegatives) {
+
+
+        if(isSpam(probability).equals("ham") && tempFile.getPath().contains("ham")) {
+            return "truePositives";
+        } else if(isSpam(probability).equals("spam") && tempFile.getPath().contains("spam")) {
+            return "trueNegatives";
+        } else if(isSpam(probability).equals("ham") && tempFile.getPath().contains("spam")) {
+            return "falsePositives";
+        } else if(isSpam(probability).equals("spam") && tempFile.getPath().contains("ham")) {
+            return "falseNegatives";
+        }
+
+        return "KEKW U BROKE IT LUL OMEGALUL GIGACHAD KEKW KEKW CAN I GET A POGGERS IN THE CHAT CUZ HOW U MAKE THIS NOT WORK DAWG";
     }
     private static String isSpam(double n) {
         if(n > 0.5) {
@@ -195,7 +222,6 @@ public class SpamDetector {
     }
 
     private static Map<String, Integer> parseWords(Map<String, Integer> wordSet, File file, Set<String> stopwords) {
-
         for (File words : file.listFiles()) {
             try (Scanner scanner = new Scanner(words)) {
                 Set<String> wordsSeen = new HashSet<>();
@@ -232,9 +258,9 @@ public class SpamDetector {
     }
 
     private static void displayCommonWords(List<Map.Entry<String, Integer>> words, String dataType) {
-        System.out.println("Top 10 most common words in " + dataType + ":");
+        //System.out.println("Top 10 most common words in " + dataType + ":");
         for (int i = 0; i < 10; i++) {
-            System.out.println(words.get(i));
+            //System.out.println(words.get(i));
         }
     }
 

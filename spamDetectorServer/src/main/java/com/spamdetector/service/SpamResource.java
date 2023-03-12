@@ -14,42 +14,40 @@ import jakarta.ws.rs.core.Response;
 @Path("/spam")
 public class SpamResource {
 
-//    your SpamDetector Class responsible for all the SpamDetecting logic
+    //    your SpamDetector Class responsible for all the SpamDetecting logic
     SpamDetector detector = new SpamDetector();
 
 
-    SpamResource(){
-//        TODO: load resources, train and test to improve performance on the endpoint calls
+    public SpamResource(){
+        //TODO: load resources, train and test to improve performance on the endpoint calls
         System.out.print("Training and testing the model, please wait");
-
-//      TODO: call  this.trainAndTest();
-
-
+        this.trainAndTest();
     }
     @GET
     @Produces("application/json")
     public Response getSpamResults() {
 //       TODO: return the test results list of TestFile, return in a Response object
-
-        return null;
+        List<TestFile> testResults = this.trainAndTest();
+        return Response.ok(testResults).build();
     }
+
 
     @GET
     @Path("/accuracy")
     @Produces("application/json")
     public Response getAccuracy() {
-//      TODO: return the accuracy of the detector, return in a Response object
-
-        return null;
+        // return the accuracy of the detector, return in a Response object
+        double accuracy = detector.getAccuracy();
+        return Response.ok("{\"accuracy\": " + accuracy + "}").build();
     }
 
     @GET
     @Path("/precision")
     @Produces("application/json")
     public Response getPrecision() {
-       //      TODO: return the precision of the detector, return in a Response object
-
-        return null;
+        //      TODO: return the precision of the detector, return in a Response object
+        double precision = detector.getPrecision();
+        return Response.ok("{\"precision\": " + precision + "}").build();
     }
 
     @GET
@@ -63,7 +61,7 @@ public class SpamResource {
         }
 
 //        TODO: load the main directory "data" here from the Resources folder
-        File mainDirectory = null;
+        File mainDirectory = new File("csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data");
         return this.detector.trainAndTest(mainDirectory);
     }
 }
