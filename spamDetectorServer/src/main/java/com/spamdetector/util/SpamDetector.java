@@ -61,16 +61,20 @@ public class SpamDetector {
         System.out.println("False Negatives: " + values2[3]);
         //Get number of files in test/spam directory
 
-        double accuracy = (values2[0] + values2[1]) / (double) (testSpamFiles.length + testHamFiles.length);
-        System.out.println("Accuracy: " + accuracy);
-
-        double precision = values2[0] / (double) (values2[0] + values2[2]);
-        System.out.println("Precision: " + precision);
+        System.out.println("Accuracy: " + getAccuracy(values2[0], values2[1], testSpamFiles.length + testHamFiles.length));
+        System.out.println("Precision: " + getPrecision(values2[0], values2[2]));
 
         }
 
         //Calculate Accuracy
 
+    public static double getAccuracy(int truePositives, int trueNegatives, int numTestFiles) {
+        return (truePositives + trueNegatives) / (double) numTestFiles;
+    }
+
+    public static double getPrecision(int truePositives, int falsePositives) {
+        return truePositives / (double) (truePositives + falsePositives);
+    }
 
 
     private static int[] checkSpam(File fileS, File[] files, Map<String, Integer> spamWordCount, Map<String, Integer> hamWordCount, Set<String> stopwords, int truePositives, int trueNegatives, int falsePositives, int falseNegatives) {
