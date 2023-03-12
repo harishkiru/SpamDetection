@@ -23,11 +23,14 @@ public class SpamResource {
         System.out.print("Training and testing the model, please wait");
         this.trainAndTest();
     }
+
     @GET
+    @Path("/")
     @Produces("application/json")
     public Response getSpamResults() {
 //       TODO: return the test results list of TestFile, return in a Response object
         List<TestFile> testResults = this.trainAndTest();
+
         return Response.ok(testResults).build();
     }
 
@@ -50,10 +53,10 @@ public class SpamResource {
         return Response.ok("{\"precision\": " + precision + "}").build();
     }
 
-    @GET
-    public String hello() {
-        return "Hello, World!";
-    }
+//    @GET
+//    public String hello() {
+//        return "Hello, World!";
+//    }
 
     private List<TestFile> trainAndTest()  {
         if (this.detector==null){
