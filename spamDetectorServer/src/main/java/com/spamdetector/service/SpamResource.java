@@ -72,7 +72,8 @@ public class SpamResource {
         }
 
 //        TODO: load the main directory "data" here from the Resources folder
-        File mainDirectory = new File("csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data");
+        File mainDirectory = new File(getClass().getClassLoader().getResource("data").getFile());
+        //File(getClass().getClassLoader().getResource("data").getFile());
         return this.detector.trainAndTest(mainDirectory);
     }
 }

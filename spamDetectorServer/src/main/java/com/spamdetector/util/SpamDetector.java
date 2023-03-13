@@ -21,17 +21,17 @@ public class SpamDetector {
         Map<String, Integer> hamWordCount = new HashMap<>();
         Set<String> stopwords = getStopwords();
 
-        File spamFile = new File("E:\\Desktop\\assspam\\csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\train\\spam");
-        File hamFile = new File("E:\\Desktop\\assspam\\csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\train\\ham");
-        File ham2File = new File("E:\\Desktop\\assspam\\csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\train\\ham2");
+        File spamFile = new File(mainDirectory.getAbsolutePath()+"\\train\\spam");
+        File hamFile = new File(mainDirectory.getAbsolutePath()+"\\train\\ham");
+        File ham2File = new File(mainDirectory.getAbsolutePath()+"\\train\\ham2");
 
         spamWordCount = parseWords(spamWordCount, spamFile, stopwords);
         hamWordCount = parseWords(hamWordCount, hamFile, stopwords);
         hamWordCount.putAll(parseWords(hamWordCount, ham2File, stopwords));
 
-        File testSpamFile = new File("E:\\Desktop\\assspam\\csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\test\\spam");
+        File testSpamFile = new File(mainDirectory.getAbsolutePath()+"\\test\\spam");
         File[] testSpamFiles = testSpamFile.listFiles();
-        File testHamFile = new File("E:\\Desktop\\assspam\\csci2020u-assignment01\\spamDetectorServer\\src\\main\\resources\\data\\test\\ham");
+        File testHamFile = new File(mainDirectory.getAbsolutePath()+"\\test\\ham");
         File[] testHamFiles = testHamFile.listFiles();
 
         int truePositives = 0;
