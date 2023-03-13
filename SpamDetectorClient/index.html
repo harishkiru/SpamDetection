@@ -24,41 +24,56 @@
 
 <body>
 
-  <!-- Add your site or application content here -->
-  <h1>Spam Analysis Dashboard</h1>
-  <p>The tabel below displays the result of our spam detection algorithm</p>
-  <div class="tableFixHead">
-  <table id="chart" >
+<div class="loader"></div>
+<!-- Add your site or application content here -->
+<div class="navbar">
+  <nav>
+    <ul>
+      <li><a href="index.html">Dashboard</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+<h1>Spam Analysis Dashboard</h1>
+<p>The table below displays the result of our spam detection algorithm</p>
+
+<!-- Add a loading screen -->
+
+<div style="float: right;">
+  <p>Accuracy: <span id="accuracy"></span></p>
+  <input type="text" value="0" id="accuracyText" disabled>
+  <p>Precision: <span id="precision"></span></p>
+  <input type="text" value="0" id="precisionText" disabled>
+</div>
+
+<div class="tableFixHead">
+  <table id="chart">
     <thead>
     <tr>
       <th>File</th>
-      <th>Spam Probability %</th>
+      <th>Spam Probability (%)</th>
       <th>Class</th>
     </tr>
     </thead>
-    <!-- add scroll-->
-
-
     <tbody class="scroll">
     </tbody>
   </table>
-  </div>
+</div>
 
 
 
+</div>
 
 
+<script src="js/vendor/modernizr-3.11.2.min.js"></script>
+<script src="js/plugins.js"></script>
+<script src="js/main.js"></script>
 
-  <script src="js/vendor/modernizr-3.11.2.min.js"></script>
-  <script src="js/plugins.js"></script>
-  <script src="js/main.js"></script>
-
-  <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
-  <script>
-    window.ga = function () { ga.q.push(arguments) }; ga.q = []; ga.l = +new Date;
-    ga('create', 'UA-XXXXX-Y', 'auto'); ga('set', 'anonymizeIp', true); ga('set', 'transport', 'beacon'); ga('send', 'pageview')
-  </script>
-  <script src="https://www.google-analytics.com/analytics.js" async></script>
+<!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
+<script>
+  window.ga = function () { ga.q.push(arguments) }; ga.q = []; ga.l = +new Date;
+  ga('create', 'UA-XXXXX-Y', 'auto'); ga('set', 'anonymizeIp', true); ga('set', 'transport', 'beacon'); ga('send', 'pageview')
+</script>
+<script src="https://www.google-analytics.com/analytics.js" async></script>
 
 </body>
 

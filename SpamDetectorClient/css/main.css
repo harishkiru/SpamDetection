@@ -258,47 +258,131 @@ textarea {
 }
 
 /* ==========================================================================
-   Custom styles
-   ========================================================================== */
-* {
+Custom styles
+========================================================================== */
+
+{
   font-size: 16px;
   margin: 0.16rem;
 }
 .tableFixHead {
   overflow-y: auto;
-
   height: 500px;
   position: fixed;
   bottom : 0;
   top: 150px;
   left: 0;
-  right:800px;
-
-
-
+  right: 800px;
 }
 
+.tableFixHead thead {
+  display: none;
+}
 
-table{
-  border-collapse: collapse; /* make the table borders collapse to each other */
+.loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #333333;
+  transition: opacity 0.75s, visibility 0.75s;
+}
+
+.loader--hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loader::after {
+  content: "";
+  width: 75px;
+  height: 75px;
+  border: 15px solid #dddddd;
+  border-top-color: #009578;
+  border-radius: 50%;
+  animation: loading 0.75s ease infinite;
+}
+
+@keyframes loading {
+  from {
+    transform: rotate(0turn);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+table {
+  border-collapse: collapse;
   width: 50%;
 }
+
 th, td {
   border: 1px solid black;
   border-collapse: separate;
 }
 
-.row{
+.row {
   display: flex;
   flex-direction: row;
 }
+
 tr.d0 td {
   background-color: #CC9999;
   color: black;
 }
+
 tr.d1 td {
   background-color: #9999CC;
   color: black;
 }
 
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
 
+thead {
+  background-color: #5A5A5A;
+  color: white;
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 90.95%;
+  width: 100%;
+  /* add any other styles for your navbar here */
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  float: left;
+  background-color: black;
+}
+
+nav li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+nav li a:hover {
+  background-color: #5f5f5f;
+}
+
+header {
+  position: relative;
+  height: 100px;
+  /* add any other styles for your header here */
+}
