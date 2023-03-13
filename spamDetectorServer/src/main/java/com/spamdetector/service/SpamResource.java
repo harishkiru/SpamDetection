@@ -30,8 +30,10 @@ public class SpamResource {
     public Response getSpamResults() {
 //       TODO: return the test results list of TestFile, return in a Response object
         List<TestFile> testResults = this.trainAndTest();
-
-        return Response.ok(testResults).build();
+        return Response.status(200)
+                .header("Access-Control-Allow-Origin", "*")
+                .entity(testResults)
+                .build();
     }
 
 
@@ -41,7 +43,10 @@ public class SpamResource {
     public Response getAccuracy() {
         // return the accuracy of the detector, return in a Response object
         double accuracy = detector.getAccuracy();
-        return Response.ok("{\"accuracy\": " + accuracy + "}").build();
+        return Response.status(200)
+                .header("Access-Control-Allow-Origin", "*")
+                .entity("{\"accuracy\": " + accuracy + "}")
+                .build();
     }
 
     @GET
@@ -50,7 +55,10 @@ public class SpamResource {
     public Response getPrecision() {
         //      TODO: return the precision of the detector, return in a Response object
         double precision = detector.getPrecision();
-        return Response.ok("{\"precision\": " + precision + "}").build();
+        return Response.status(200)
+                .header("Access-Control-Allow-Origin", "*")
+                .entity("{\"precision\": " + precision + "}")
+                .build();
     }
 
 //    @GET

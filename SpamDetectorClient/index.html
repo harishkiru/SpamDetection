@@ -27,8 +27,8 @@
   <!-- Add your site or application content here -->
   <h1>Spam Analysis Dashboard</h1>
   <p>The tabel below displays the result of our spam detection algorithm</p>
-
-  <table id="chart">
+  <div class="tableFixHead">
+  <table id="chart" >
     <thead>
     <tr>
       <th>File</th>
@@ -36,10 +36,13 @@
       <th>Class</th>
     </tr>
     </thead>
-    <tbody>
+    <!-- add scroll-->
+
+
+    <tbody class="scroll">
     </tbody>
   </table>
-
+  </div>
 
 
 
@@ -56,6 +59,7 @@
     ga('create', 'UA-XXXXX-Y', 'auto'); ga('set', 'anonymizeIp', true); ga('set', 'transport', 'beacon'); ga('send', 'pageview')
   </script>
   <script src="https://www.google-analytics.com/analytics.js" async></script>
+
 </body>
 
 </html>

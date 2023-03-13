@@ -3,7 +3,7 @@
 
 window.onload = function() {
   fetch("http://localhost:8080/spamDetector-1.0/api/spam",{
-
+    mode: 'cors',
   })
     .then((response) => {
       if (!response.ok) {

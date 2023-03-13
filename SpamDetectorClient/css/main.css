@@ -264,8 +264,26 @@ textarea {
   font-size: 16px;
   margin: 0.16rem;
 }
+.tableFixHead {
+  overflow-y: auto;
 
-table, th, td {
+  height: 500px;
+  position: fixed;
+  bottom : 0;
+  top: 150px;
+  left: 0;
+  right:800px;
+
+
+
+}
+
+
+table{
+  border-collapse: collapse; /* make the table borders collapse to each other */
+  width: 50%;
+}
+th, td {
   border: 1px solid black;
   border-collapse: separate;
 }
@@ -274,4 +292,13 @@ table, th, td {
   display: flex;
   flex-direction: row;
 }
+tr.d0 td {
+  background-color: #CC9999;
+  color: black;
+}
+tr.d1 td {
+  background-color: #9999CC;
+  color: black;
+}
+
 
