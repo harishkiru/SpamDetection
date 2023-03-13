@@ -385,3 +385,10 @@ nav li a:hover {
 #headerNav {
   margin-top: 50px; /* or any value you prefer */
 }
+
+#data {
+  float: right;
+  border: 1px solid black;
+  padding: 10px;
+}
+
