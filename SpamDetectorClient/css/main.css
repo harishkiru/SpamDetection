@@ -268,11 +268,8 @@ Custom styles
 .tableFixHead {
   overflow-y: auto;
   height: 500px;
-  position: fixed;
-  bottom : 0;
-  top: 150px;
-  left: 0;
-  right: 800px;
+  position: absolute;
+
 }
 
 .tableFixHead thead {
