@@ -21,6 +21,7 @@ public class SpamResource {
     public SpamResource(){
         //TODO: load resources, train and test to improve performance on the endpoint calls
         System.out.print("Training and testing the model, please wait");
+        //trains and tests the model
         this.trainAndTest();
     }
 
@@ -73,6 +74,7 @@ public class SpamResource {
 
 
 //        TODO: load the main directory "data" here from the Resources folder
+        //gets the main directorys path
         File mainDirectory = new File(getClass().getClassLoader().getResource("/data").getFile());
         //File(getClass().getClassLoader().getResource("data").getFile());
         return this.detector.trainAndTest(mainDirectory);
