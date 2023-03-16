@@ -1,10 +1,12 @@
-a. The project is a spam detection ai that utilizes a unigram approach to determine whether or not a message is spam. The program will calculate probabilities based on each word’s frequency. The program will read the testing and training data files, train, and test the model. The program will return a json file with the spam probability of each message. The program will also return the accuracy and precision of the model. On the left side of the html page there is the name of the file the percentage of it being a spam and its class and on the right side of the page is the accuracy and persicion of the model. 
+# Assignment 01 - Spam Detector
+> Course: CSCI 2020U: Software Systems Development and Integration
+
+A. The project is a spam detection ai that utilizes a unigram approach to determine whether or not a message is spam. The program will calculate probabilities based on each word’s frequency. The program will read the testing and training data files, train, and test the model. The program will return a json file with the spam probability of each message. The program will also return the accuracy and precision of the model. On the left side of the html page there is the name of the file the percentage of it being a spam and its class and on the right side of the page is the accuracy and persicion of the model. 
 ![Webpage](image.png)
 
-b. Our project used regex to eleminate strings that were not of the english dictionary and used stopwords to eleminate words that were not important to the model. For the interface of the webpage we added a background image, alternating backgroun colors for the table to add readability, and a font that was easy to read. added a top bar to flip between two pages and hovering over the buttons will change the color of the button.
+B. Our project used regex to eleminate strings that were not of the english dictionary and used stopwords to eleminate words that were not important to the model. For the interface of the webpage we added a background image, alternating backgroun colors for the table to add readability, and a font that was easy to read. added a top bar to flip between two pages and hovering over the buttons will change the color of the button.
 
-
-c.To successfully clone and run our application:
+C.To successfully clone and run our application:
 Steps to clone application
 
 1- get github repo link
@@ -31,4 +33,4 @@ Steps to clone application
 
 
 
-d. Regex library  
+D. We used regex to filter out characters that are non alphabetical and non numeric. We also used regex to filter out words that are not in the english dictionary. We used a stopword list to filter out words that are not important to the model.
