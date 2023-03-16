@@ -71,8 +71,9 @@ public class SpamResource {
             this.detector = new SpamDetector();
         }
 
+
 //        TODO: load the main directory "data" here from the Resources folder
-        File mainDirectory = new File(getClass().getClassLoader().getResource("data").getFile());
+        File mainDirectory = new File(getClass().getClassLoader().getResource("/data").getFile());
         //File(getClass().getClassLoader().getResource("data").getFile());
         return this.detector.trainAndTest(mainDirectory);
     }
