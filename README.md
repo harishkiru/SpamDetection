@@ -26,11 +26,11 @@ To install and run this project, follow these steps:
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/harishkiru/kirubaharan-ali-patel-csci2020u-assignment01.git
+   git clone https://github.com/harishkiru/SpamDetection.git
 
 2. **Navigate to the Folder**
     ```bash
-    cd [Folder Name]
+    cd SpamDetection
 
 3. Open the cloned repository in your preferred IDE.
 
